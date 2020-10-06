@@ -18,7 +18,7 @@ Depois de criada uma conta google padrão, cada usuário tem direito a $300 para
 
 Para criar o cluster, vamos na aba "Dataproc", acessível pelo menu lateral que aparece na esquerda do site, conforme a imagem abaixo.
 
-<img src="\images\sc1.png">
+<img src="\hadoop-spark-word-counter\images\sc1.png">
 
 
 You can use the [editor on GitHub](https://github.com/matheusferreira195/hadoop-spark-word-counter/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
