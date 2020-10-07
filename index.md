@@ -32,40 +32,106 @@ O legal do GCP é que tudo que precisamos para começar a trabalhar será criado
 
 ### Acessando o cluster através de SSH
 
+Antes de começar a escrever os scripts, é necessário transferir o .txt para a máquina master, subir esse arquivo pro HDFS e criar os diretórios do projeto. Para isso, a GCP oferece excelentes ferramentas de SSH que nos permitem acessar facilmente a máquina master, literalmente no apertar de um botão.
 
+<img src="https://github.com/matheusferreira195/hadoop-spark-word-counter/blob/gh-pages/imgs/sc2.png">
 
-You can use the [editor on GitHub](https://github.com/matheusferreira195/hadoop-spark-word-counter/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+Agora que temos acesso a nossa master, basta criar dois diretórios no /home, o /home/files e /home/scripts. Dentro de /home/files, executamos o seguinte comando para baixar o .txt contendo as obras de Shakespeare:
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+```
+sudo wget https://raw.githubusercontent.com/andretadeu/spark-wordcount/master/src/main/resources/shakespeare.txt
 
-### Markdown
+```
+Feito isso, subimos o arquivo no HDFS usando o seguinte comando:
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+```
+hdfs dfs -mkdir /files
+hdfs dfs -put /home/files/shakespeare.txt /files
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
+Agora temos o necessário para poder começar o experimento.
 
-### Jekyll Themes
+### Criando job PySpark usando Notebooks Jupyter
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/matheusferreira195/hadoop-spark-word-counter/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+Como selecionamos na criação do cluster o pacote adicional do Anaconda e do Jupyter, podemos acessar com um botão esses ambientes na nossa máquina master. 
 
-### Support or Contact
+<img src="https://github.com/matheusferreira195/hadoop-spark-word-counter/blob/gh-pages/imgs/sc3.png">
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+O script corresponde em iniciar a SparkSession, carregar o arquivo .txt, pré-processar o arquivo e iniciar as operações de map e reduce. Para uma visão mais detalhada, pode-se acessar o [html do notebook Jupyter](https://github.com/matheusferreira195/hadoop-spark-word-counter/blob/main/resources/SparkJob.html).
+
+O tempo de execução dessa tarefa, para o .txt de 5MB, foi de 6.8835 segundos.
+
+## Criando job Hadoop usando Hadoop Streaming + Python
+
+O Hadoop Streaming permite que sejam utilizados scripts customizados para as etapas de Map e de Reduce. Tomaremos proveito dessa feature para usar scripts python.
+
+Primeiro, o script de map:
+
+```
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+ 
+# Obtendo texto do stdin
+for line in sys.stdin:
+    # Dividindo texto em palavras
+    line = line.strip()
+    words = line.split(' ')
+
+    # Escrevendo palavras no stdout
+    for word in words: 
+        print '%s\t%s' % (word, "1")
+
+```
+Esse script simplesmente coleta o que estiver no stdin, divide em palavras e escreve no stdout.
+
+Para o reduce, temos:
+
+```
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import sys
+ 
+# Armazena a relacao de palavras e sua frequencia
+word2count = {}
+ 
+# Coleta input do stdin
+for line in sys.stdin:
+    # Remove espacos
+    line = line.strip()
+
+    # Parseia o que foi escrito pelo mapper no stdin
+    word, count = line.split('\t', 1)
+    
+    # Converte contagem em inteiro
+    try:
+        count = int(count)
+    except ValueError:
+        continue
+
+    try:
+        word2count[word] = word2count[word]+count
+    except:
+        word2count[word] = count
+ 
+# Escreve tuplas no stdout
+for word in word2count.keys():
+    print '%s\t%s'% ( word, word2count[word] )
+```
+O script de reduce também é muito simples.
+
+Agora podemos executar o job utilizando o seguinte comando:
+
+```
+hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar -file /home/scripts/mapper.py -mapper mapper.py -file /home/scripts/reducer.py -reducer reducer.py -input /files/shakespeare.txt -output /files/output
+```
+Esse job foi completados em impressionantes 61 segundos, conforme podemos conferir no log do Hadoop abaixo.
+
+<img src="https://github.com/matheusferreira195/hadoop-spark-word-counter/blob/gh-pages/imgs/sc4.png">
+
+
+## Comparação: Hadoop vs Spark
+
+Os resultados foram bem claros, o Spark conseguiu finalizar a task aproximadamente 10x mais rápido. Isso se deve ao fato de o Spark realizar suas operações em memória, o que traz a desvantagem de demandar máquinas mais poderosas para executar tasks mais exigentes.
