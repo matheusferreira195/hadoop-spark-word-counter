@@ -18,7 +18,7 @@ Depois de criada uma conta google padrão, cada usuário tem direito a $300 para
 
 Para criar o cluster, vamos na aba "Dataproc", acessível pelo menu lateral que aparece na esquerda do site, conforme a imagem abaixo.
 <a href="https://imgur.com/xPzYHha">
-![](https://imgur.com/xPzYHha)
+![](imgs/sc1.png)
 
 Feito isso, precisamos apenas configurar o cluster. Como o objetivo desse artigo não é ensinar [como configurar um cluster na GCP](https://www.youtube.com/watch?v=6DD-vBdJJxk&t=602s&ab_channel=LearningJournal), colocarei abaixo apenas as configurações que utilizei em forma de comando da gcloud shell.
 
