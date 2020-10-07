@@ -17,7 +17,7 @@ Os seguintes passos precisam ser realizados:
 Depois de criada uma conta google padrão, cada usuário tem direito a $300 para testar os serviços de cloud oferecidos pela Google. Tendo uma conta em mãos e feito o login, é necessário acessar o [console](https://cloud.google.com/cloud-console) do Google Cloud. Feito isso, o primeiro projeto é criado automaticamente e temos acesso aos serviços da GCP.
 
 Para criar o cluster, vamos na aba "Dataproc", acessível pelo menu lateral que aparece na esquerda do site, conforme a imagem abaixo.
-<a href="https://imgur.com/xPzYHha">
+
 ![](imgs/sc1.png)
 
 Feito isso, precisamos apenas configurar o cluster. Como o objetivo desse artigo não é ensinar [como configurar um cluster na GCP](https://www.youtube.com/watch?v=6DD-vBdJJxk&t=602s&ab_channel=LearningJournal), colocarei abaixo apenas as configurações que utilizei em forma de comando da gcloud shell.
