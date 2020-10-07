@@ -18,7 +18,7 @@ Depois de criada uma conta google padrão, cada usuário tem direito a $300 para
 
 Para criar o cluster, vamos na aba "Dataproc", acessível pelo menu lateral que aparece na esquerda do site, conforme a imagem abaixo.
 
-<img src="https://github.com/matheusferreira195/hadoop-spark-word-counter/blob/gh-pages/imgs/sc1.png">
+<img src="https://imgur.com/xPzYHha">
 
 Feito isso, precisamos apenas configurar o cluster. Como o objetivo desse artigo não é ensinar [como configurar um cluster na GCP](https://www.youtube.com/watch?v=6DD-vBdJJxk&t=602s&ab_channel=LearningJournal), colocarei abaixo apenas as configurações que utilizei em forma de comando da gcloud shell.
 
@@ -34,7 +34,7 @@ O legal do GCP é que tudo que precisamos para começar a trabalhar será criado
 
 Antes de começar a escrever os scripts, é necessário transferir o .txt para a máquina master, subir esse arquivo pro HDFS e criar os diretórios do projeto. Para isso, a GCP oferece excelentes ferramentas de SSH que nos permitem acessar facilmente a máquina master, literalmente no apertar de um botão.
 
-<img src="https://github.com/matheusferreira195/hadoop-spark-word-counter/blob/gh-pages/imgs/sc2.png">
+<img src="https://imgur.com/zjVz84B">
 
 Agora que temos acesso a nossa master, basta criar dois diretórios no /home, o /home/files e /home/scripts. Dentro de /home/files, executamos o seguinte comando para baixar o .txt contendo as obras de Shakespeare:
 
@@ -55,7 +55,7 @@ Agora temos o necessário para poder começar o experimento.
 
 Como selecionamos na criação do cluster o pacote adicional do Anaconda e do Jupyter, podemos acessar com um botão esses ambientes na nossa máquina master. 
 
-<img src="https://github.com/matheusferreira195/hadoop-spark-word-counter/blob/gh-pages/imgs/sc3.png">
+<img src="https://imgur.com/5UDnkZx">
 
 O script corresponde em iniciar a SparkSession, carregar o arquivo .txt, pré-processar o arquivo e iniciar as operações de map e reduce. Para uma visão mais detalhada, pode-se acessar o [html do notebook Jupyter](https://github.com/matheusferreira195/hadoop-spark-word-counter/blob/main/resources/SparkJob.html).
 
@@ -129,7 +129,7 @@ hadoop jar /usr/lib/hadoop-mapreduce/hadoop-streaming.jar -file /home/scripts/ma
 ```
 Esse job foi completados em impressionantes 61 segundos, conforme podemos conferir no log do Hadoop abaixo.
 
-<img src="https://github.com/matheusferreira195/hadoop-spark-word-counter/blob/gh-pages/imgs/sc4.png">
+<img src="https://imgur.com/Or4XRIx">
 
 
 ## Comparação: Hadoop vs Spark
