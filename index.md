@@ -1,5 +1,7 @@
 ## Hadoop vs Spark na GCP: Uma comparação Shakesperiana
 
+![](imgs/Shakespeare.jpg)
+
 Apesar de serem tecnologias diferentes, a comparação dos dois frameworks mantidos pela Apache é inevitável. Para tirar essa dúvida de inciante, iremos nesse projeto comparar como as duas tecnologias lidam com uma tarefa estilo "Hello World", um contador de frequências de palavras de um 
 dataset com todas as obras de William Shakespeare, um [.txt com mais de 5 MB](https://www.kaggle.com/kewagbln/shakespeare-word-count-with-spark-python?select=t8.shakespeare.txt). Para isso, usaremos a infraestrutura oferecida pela Google Cloud Platform (GCP), que permite facilmente subir clusters hadoop e spark, de forma gratuita no caso de pequenos projetos como esse.
 
